@@ -10,6 +10,9 @@ import {
   Github,
   Twitter,
   BookOpen,
+  Copy,
+  CheckCircle,
+  ExternalLink,
 } from "lucide-react";
 
 // Import sub-pages
@@ -25,10 +28,26 @@ interface LandingPageProps {
   onEnterApp: () => void;
 }
 
+// Placeholder Contract Address - Replace with actual CA when deployed
+const CONTRACT_ADDRESS = "Coming Soon";
+const EXPLORER_URL = "#"; // Replace with actual explorer URL
+
 export function LandingPage({ onEnterApp }: LandingPageProps) {
   const [currentPage, setCurrentPage] = useState<PageType>("home");
   const [scrolled, setScrolled] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = async () => {
+    if (CONTRACT_ADDRESS === "Coming Soon") return;
+    try {
+      await navigator.clipboard.writeText(CONTRACT_ADDRESS);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -168,6 +187,73 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
                 <p className="text-3xl font-bold text-white">127 TOKEN</p>
                 <p className="text-oc-text/50">Value Preserved</p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTRACT ADDRESS */}
+      <section className="py-12 border-t border-b border-oc-border bg-gradient-to-r from-oc-cyan/5 via-oc-darker to-oc-cyan/5">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              {/* Label */}
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-oc-cyan/10 border border-oc-cyan/30 flex items-center justify-center">
+                  <Terminal size={24} className="text-oc-cyan" />
+                </div>
+                <p className="text-oc-cyan text-sm font-mono uppercase tracking-wider">Contract Address</p>
+              </div>
+
+              {/* CA Display */}
+              <div className="flex-1 max-w-xl">
+                <div className="flex items-center gap-2 p-4 bg-oc-black/50 border border-oc-border rounded-xl">
+                  <code className="flex-1 font-mono text-sm md:text-base text-white truncate">
+                    {CONTRACT_ADDRESS}
+                  </code>
+
+                  {CONTRACT_ADDRESS !== "Coming Soon" && (
+                    <>
+                      {/* Copy Button */}
+                      <button
+                        onClick={copyToClipboard}
+                        className="p-2 rounded-lg bg-oc-cyan/10 border border-oc-cyan/30 hover:bg-oc-cyan/20 transition-colors group"
+                        title="Copy to clipboard"
+                      >
+                        {copied ? (
+                          <CheckCircle size={18} className="text-green-400" />
+                        ) : (
+                          <Copy size={18} className="text-oc-cyan group-hover:text-white transition-colors" />
+                        )}
+                      </button>
+
+                      {/* Explorer Link */}
+                      <a
+                        href={EXPLORER_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-lg bg-oc-cyan/10 border border-oc-cyan/30 hover:bg-oc-cyan/20 transition-colors group"
+                        title="View on Explorer"
+                      >
+                        <ExternalLink size={18} className="text-oc-cyan group-hover:text-white transition-colors" />
+                      </a>
+                    </>
+                  )}
+                </div>
+
+                {/* Status Badge */}
+                {CONTRACT_ADDRESS === "Coming Soon" ? (
+                  <p className="mt-2 text-center text-yellow-400/70 text-xs font-mono">
+                    Contract deployment in progress...
+                  </p>
+                ) : (
+                  <p className="mt-2 text-center text-green-400/70 text-xs font-mono flex items-center justify-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                    Verified Contract
+                  </p>
+                )}
+              </div>
+
             </div>
           </div>
         </div>
@@ -534,7 +620,7 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
             </div>
 
             <p className="text-oc-text/30 text-sm">
-              © 2024 VoidClaw Protocol
+              © 2026 VoidClaw Protocol
             </p>
           </div>
         </div>
